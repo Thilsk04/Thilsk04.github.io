@@ -1,0 +1,199 @@
+[
+  {
+    "slug": "japan",
+    "title": "Around Japan",
+    "category": "Travel",
+    "subtitle": "Everyday scenes and places I have explored.",
+    "intro": "A small collection of photos from life in Japan and trips around the country.",
+    "cover": "/images/life/japan/kinkakuji.jpg",
+    "photos": [
+    {
+      "src": "/images/life/japan/kinkakuji.jpg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/japan/kyoto_imperial_palace.jpg",
+      "location": "",
+      "caption": ""
+      }
+    ]
+  },
+  {
+    "slug": "taiwan",
+    "title": "Taiwan",
+    "category": "Travel",
+    "subtitle": "A few photos from Taiwan.",
+    "intro": "Photos from my visit to Taiwan.",
+    "cover": "/images/life/taiwan/8.jpg",
+    "photos": [
+      {
+      "src": "/images/life/taiwan/1.jpg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/taiwan/2.jpg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/taiwan/3.jpg",
+      "location": "",
+      "caption": ""
+      },
+            {
+      "src": "/images/life/taiwan/4.jpg",
+      "location": "",
+      "caption": ""
+      },
+            {
+      "src": "/images/life/taiwan/5.jpg",
+      "location": "",
+      "caption": ""
+      },
+            {
+      "src": "/images/life/taiwan/6.jpg",
+      "location": "",
+      "caption": ""
+      },
+            {
+      "src": "/images/life/taiwan/7.jpg",
+      "location": "",
+      "caption": ""
+      },
+            {
+      "src": "/images/life/taiwan/8.jpg",
+      "location": "",
+      "caption": ""
+      },
+            {
+      "src": "/images/life/taiwan/9.jpg",
+      "location": "",
+      "caption": ""
+      },
+            {
+      "src": "/images/life/taiwan/10.jpg",
+      "location": "",
+      "caption": ""
+      }
+    ]
+  },
+  {
+    "slug": "china",
+    "title": "China",
+    "category": "Travel",
+    "subtitle": "A few photos from China.",
+    "intro": "A few photographs and moments from my time in China.",
+    "cover": "",
+    "photos": [ 
+      {
+      "src": "/images/life/china/china_1.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_2.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_3.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_4.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_5.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_6.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_7.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_8.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_9.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_10.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_11.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/china/china_12.jpeg",
+      "location": "",
+      "caption": ""
+      },
+
+      {
+      "src": "/images/life/china/china_13.jpeg",
+      "location": "",
+      "caption": ""
+      }
+  
+    ]
+  },
+  {
+    "slug": "campus",
+    "title": "Dorm & campus life",
+    "category": "Campus",
+    "subtitle": "University events and seasonal gatherings.",
+    "intro": "A few moments from activities I have helped organize with university residents, including monthly CCM, movie nights, Secret Santa, takoyaki parties, and seasonal events.",
+    "cover": "",
+    "photos": [
+      {
+      "src": "/images/life/campus/christmas.jpg",
+      "location": "",
+      "caption": ""
+      }
+    ]
+  },
+  {
+    "slug": "teaching",
+    "title": "Teaching in Japan",
+    "category": "Teaching",
+    "subtitle": "English teaching and places I have visited.",
+    "intro": "A few photographs from teaching visits and the places I have explored in Japan.",
+    "cover": "",
+    "photos": [
+      {
+      "src": "/images/life/teaching/hiroshima_2.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/teaching/gifu.jpeg",
+      "location": "",
+      "caption": ""
+      },
+      {
+      "src": "/images/life/teaching/hiroshima.jpeg",
+      "location": "",
+      "caption": ""
+      }
+    ]
+  }
+]

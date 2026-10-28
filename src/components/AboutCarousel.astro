@@ -1,0 +1,99 @@
+---
+import { gallery } from '../data/highlights';
+import { albums } from '../data/life';
+const teaching = albums.find(a => a.slug === 'teaching');
+const campus = albums.find(a => a.slug === 'campus');
+const allMoments = [
+  ...gallery.map(item => ({...item, href: '/research/'})),
+  {heading:'Teaching in Japan',label:'Teaching',caption:'English teaching and visits around Japan.',href:'/moments/teaching/',image:teaching?.photos[0]?.src || teaching?.cover || undefined,alt:teaching?.photos[0]?.alt || teaching?.coverAlt || ''},
+  {heading:'Dorm & campus life',label:'Community',caption:'Activities and events with university residents.',href:'/moments/campus/',image:campus?.photos[0]?.src || campus?.cover || undefined,alt:campus?.photos[0]?.alt || campus?.coverAlt || ''}
+];
+const moments = allMoments.some(item => Boolean(item.image)) ? allMoments.filter(item => Boolean(item.image)) : allMoments;
+---
+<div class="about-media-column" data-about-carousel>
+  <div class="moments-slide-frame" id="about-moments-carousel" role="region" aria-roledescription="carousel" aria-label="Moments from research, teaching and community life">
+    {moments.map((item, i) => (
+      <a class:list={['moment-slide',{'is-active':i===0}]} href={item.href} aria-hidden={i!==0 ? 'true' : undefined} tabindex={i===0 ? 0 : -1} data-moment-slide>
+        {item.image ? <img src={item.image} alt={item.alt ?? ''} loading={i===0 ? 'eager' : 'lazy'} /> :
+          <span class="moment-slide-placeholder"><span aria-hidden="true">▧</span><small>Photo {String(i+1).padStart(2,'0')}</small></span>}
+      </a>
+    ))}
+  </div>
+  <div class="moment-details">
+    <div class="moment-description-block" aria-live="off">
+      {moments.map((item,i) => (
+        <div class:list={['moment-detail',{'is-active':i===0}]} data-moment-detail aria-hidden={i!==0 ? 'true' : undefined}>
+          <p class="moment-detail-label">{item.label}</p>
+          <p class="moment-detail-title">{item.heading}</p>
+          <p class="moment-detail-caption">{item.caption}</p>
+        </div>
+      ))}
+    </div>
+    <div class="moments-minimal-controls" data-moments-controls hidden>
+      <div class="moments-dots" aria-label="Select photo">
+        {moments.map((item,i) => <button type="button" class:list={['moment-dot',{'is-active':i===0}]} data-moments-dot={i} aria-label={`Show photo ${i+1}: ${item.heading}`} aria-current={i===0?'true':undefined} />)}
+      </div>
+      <button type="button" class="moments-icon-toggle" data-moments-play data-paused="false" aria-label="Pause automatic slideshow" title="Pause slideshow">
+        <svg class="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5v14M15 5v14"/></svg>
+        <svg class="play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+  const root = document.querySelector<HTMLElement>('[data-about-carousel]');
+  const frame = root?.querySelector<HTMLElement>('#about-moments-carousel');
+  const controls = root?.querySelector<HTMLElement>('[data-moments-controls]');
+  if (root && frame && controls) {
+    const slides = Array.from(frame.querySelectorAll<HTMLAnchorElement>('[data-moment-slide]'));
+    const details = Array.from(root.querySelectorAll<HTMLElement>('[data-moment-detail]'));
+    const dots = Array.from(controls.querySelectorAll<HTMLButtonElement>('[data-moments-dot]'));
+    const toggle = controls.querySelector<HTMLButtonElement>('[data-moments-play]');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const INTERVAL_MS = 3000;
+    let active = 0;
+    let timer: number | undefined;
+    let visible = false;
+    let hovered = false;
+    let manuallyPaused = reduced.matches;
+    function select(index: number) {
+      active = (index + slides.length) % slides.length;
+      slides.forEach((slide,i) => {
+        const on = i === active;
+        slide.classList.toggle('is-active', on);
+        slide.tabIndex = on ? 0 : -1;
+        if (on) slide.removeAttribute('aria-hidden'); else slide.setAttribute('aria-hidden','true');
+      });
+      details.forEach((detail,i) => {
+        detail.classList.toggle('is-active',i===active);
+        if (i===active) detail.removeAttribute('aria-hidden'); else detail.setAttribute('aria-hidden','true');
+      });
+      dots.forEach((dot,i) => {
+        dot.classList.toggle('is-active',i===active);
+        if (i===active) dot.setAttribute('aria-current','true'); else dot.removeAttribute('aria-current');
+      });
+    }
+    function refreshToggle() {
+      if (!toggle) return;
+      toggle.dataset.paused = String(manuallyPaused);
+      const action = manuallyPaused ? 'Play' : 'Pause';
+      toggle.setAttribute('aria-label',`${action} automatic slideshow`);
+      toggle.title = `${action} slideshow`;
+    }
+    function refreshTimer() {
+      if (timer!==undefined) { window.clearInterval(timer); timer=undefined; }
+      if (slides.length>1 && visible && !document.hidden && !hovered && !manuallyPaused) timer = window.setInterval(()=>select(active+1), INTERVAL_MS);
+    }
+    dots.forEach((dot,i)=>dot.addEventListener('click',()=>{select(i);refreshTimer();}));
+    toggle?.addEventListener('click',()=>{manuallyPaused=!manuallyPaused;refreshToggle();refreshTimer();});
+    frame.addEventListener('pointerenter',()=>{hovered=true;refreshTimer();});
+    frame.addEventListener('pointerleave',()=>{hovered=false;refreshTimer();});
+    frame.addEventListener('focusin',()=>{hovered=true;refreshTimer();});
+    frame.addEventListener('focusout',e=>{if (!frame.contains(e.relatedTarget as Node|null)){hovered=false;refreshTimer();}});
+    document.addEventListener('visibilitychange',refreshTimer);
+    reduced.addEventListener('change',e=>{if(e.matches)manuallyPaused=true;refreshToggle();refreshTimer();});
+    if ('IntersectionObserver' in window) new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??false;refreshTimer();},{threshold:.25}).observe(frame);
+    else visible=true;
+    select(0);refreshToggle();controls.hidden=slides.length<=1;refreshTimer();
+  }
+</script>

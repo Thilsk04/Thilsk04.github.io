@@ -1,0 +1,7 @@
+---
+import { albums } from '../../data/life';
+export function getStaticPaths(){return albums.map(album=>({params:{slug:album.slug},props:{album}}));}
+const {album}=Astro.props;
+const dest = `/moments/${album.slug}/`;
+---
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta http-equiv="refresh" content={`0;url=${dest}`}/><meta name="robots" content="noindex"/><link rel="canonical" href={dest}/><title>Moments — redirect</title></head><body><p>Album moved to <a href={dest}>Moments</a>.</p></body></html>

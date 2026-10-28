@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectVisual from '../../components/ProjectVisual.astro';
+import { projects } from '../../data/projects';
+export function getStaticPaths(){ return projects.map(project=>({ params:{slug:project.slug}, props:{project} })); }
+const { project } = Astro.props;
+---
+<BaseLayout title={`${project.title} — Thilini Karunarathna`} description={project.summary}>
+  <article class="detail-page wrap">
+    <a href="/work/" class="back-link">← All projects</a>
+    <h1>{project.title}</h1>
+    <p class="detail-lede">{project.summary}</p>
+    <div class="detail-meta"><div><span>Category</span><strong>{project.category}</strong></div><div><span>Period</span><strong>{project.timeframe}</strong></div><div><span>Status</span><strong>{project.status}</strong></div><div><span>Tools</span><strong>{project.tags.join(' · ')}</strong></div></div>
+    <div class:list={['detail-visual', { 'detail-visual-image': project.image }]}><ProjectVisual project={project} large={true}/></div>
+    <div class="detail-columns"><div class="detail-side"><h2>Overview</h2></div><div class="detail-main"><p>{project.overview}</p></div></div>
+    <div class="detail-columns"><div class="detail-side"><h2>My work</h2></div><div class="detail-main"><ul class="detail-points">{project.approach.map(item=><li>{item}</li>)}</ul></div></div>
+    <div class="detail-columns"><div class="detail-side"><h2>Outcome</h2></div><div class="detail-main"><p>{project.outcome}</p>{project.links && <div class="detail-links">{project.links.map(link=><a href={link.url} target="_blank" rel="noopener noreferrer">{link.label} ↗</a>)}</div>}</div></div>
+    <div class="next-project"><span>Other projects</span><div>{projects.filter(p=>p.slug!==project.slug).map(p=><a href={`/projects/${p.slug}/`}>{p.title} ↗</a>)}</div></div>
+  </article>
+</BaseLayout>

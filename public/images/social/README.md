@@ -1,0 +1,1 @@
+Brand icons: LinkedIn, GitHub, Google Scholar, and Instagram are from Font Awesome Free 6.7.2 Brands (https://fontawesome.com/), Icons: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Brand marks belong to their respective owners. Their appearance does not imply endorsement.

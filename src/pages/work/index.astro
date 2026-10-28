@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectVisual from '../../components/ProjectVisual.astro';
+import TechnologyGrid from '../../components/TechnologyGrid.astro';
+import { projects } from '../../data/projects';
+---
+<BaseLayout title="Work | Thilini Karunarathna" description="Selected software, machine learning, and wearable computing projects by Thilini Karunarathna.">
+  <section class="section work-section work-page-projects">
+    <div class="wrap">
+      <div class="publications-page-header work-page-heading">
+        <h1>Projects<span class="hero-period">.</span></h1>
+      </div>
+      <div class="project-grid">
+        {projects.map((project,i)=>(
+          <a class:list={['project-card',{'project-card-featured':i===0}]} href={`/projects/${project.slug}/`}>
+            <div class="project-card-image"><ProjectVisual project={project} large={i===0}/></div>
+            <div class="project-card-body"><div class="project-category"><span>{project.category}</span><span>{project.number} / {String(projects.length).padStart(2,'0')}</span></div><h3>{project.title}</h3><p>{project.summary}</p><div class="project-bottom"><span class="tag-row">{project.tags.slice(0,3).map(t=><span class="tag">{t}</span>)}</span><span class="arrow-circle" aria-hidden="true">↗</span></div></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="section skills-section work-tools" id="tools">
+    <div class="wrap"><div class="section-heading"><div><h2>Tools &amp; technologies</h2></div><p>Languages, libraries and platforms I use.</p></div><TechnologyGrid /></div>
+  </section>
+</BaseLayout>

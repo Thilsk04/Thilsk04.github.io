@@ -1,0 +1,24 @@
+---
+import { technologyGroups } from '../data/technologies';
+---
+<div class="technologies-grid">
+  {technologyGroups.map(group => (
+    <div class="technology-group">
+      <h3>{group.heading}</h3>
+      <div class="technology-icons">
+        {group.items.map(tool => (
+          <div class:list={['technology-tile',{'technology-tile-wide':tool.wide}]} title={tool.name} role="img" aria-label={tool.name}>
+            <img src={tool.logo} alt="" loading="lazy" decoding="async" data-brand-logo />
+            <span class="technology-fallback" aria-hidden="true">{tool.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+<script>
+  document.querySelectorAll<HTMLImageElement>('[data-brand-logo]').forEach(img => {
+    img.addEventListener('error',()=>img.parentElement?.classList.add('technology-logo-error'));
+    if(img.complete && img.naturalWidth===0) img.parentElement?.classList.add('technology-logo-error');
+  });
+</script>

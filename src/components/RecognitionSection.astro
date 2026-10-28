@@ -1,0 +1,44 @@
+---
+import { awards, scholarships } from '../data/highlights';
+---
+<section class="research-recognition" id="awards" aria-labelledby="recognition-heading">
+  <details class="recognition-disclosure">
+    <summary>
+      <h2 id="recognition-heading">Awards &amp; scholarships</h2>
+      <span class="recognition-control">
+        <span class="recognition-view">View details</span>
+        <span class="recognition-hide">Hide details</span>
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m6 9 6 6 6-6"></path>
+        </svg>
+      </span>
+    </summary>
+    <div class="recognition-content">
+      <h3 class="recognition-group-heading">Awards</h3>
+      <div class="awards-editorial-grid">
+        {awards.map(award => (
+          <article class="award-editorial-item">
+            <span class="award-editorial-year">{award.year}</span>
+            <h4>{award.title}</h4>
+            <p class="recognition-issuer">{award.organization}</p>
+            <p class="recognition-description">{award.detail}</p>
+            {award.link && <a class="recognition-paper" href={award.link} target="_blank" rel="noopener noreferrer">Related paper ↗</a>}
+          </article>
+        ))}
+      </div>
+      <div class="recognition-scholarships">
+        <h3 class="recognition-group-heading">Scholarships</h3>
+        <div class="scholarships-editorial-grid">
+          {scholarships.map(item => (
+            <article class="scholarship-editorial-item">
+              <span class="award-editorial-year">{item.period}</span>
+              <h4>{item.title}</h4>
+              <p class="recognition-issuer">{item.organization}</p>
+              <p class="recognition-description">{item.detail}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </details>
+</section>

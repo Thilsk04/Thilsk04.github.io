@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/profile';
+const {title = profile.name, description = profile.introduction} = Astro.props;
+const pathname = Astro.url.pathname;
+const current = pathname === '/' ? 'home' : pathname.startsWith('/about') ? 'about' : (pathname.startsWith('/work') || pathname.startsWith('/projects')) ? 'work' : (pathname.startsWith('/research') || pathname.startsWith('/publications')) ? 'research' : (pathname.startsWith('/moments') || pathname.startsWith('/life')) ? 'moments' : '';
+const nav = [
+  {label:'Home',href:'/',key:'home'},
+  {label:'About',href:'/about/',key:'about'},
+  {label:'Work',href:'/work/',key:'work'},
+  {label:'Research',href:'/research/',key:'research'},
+  {label:'Moments',href:'/moments/',key:'moments'},
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f9f8f6" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="canonical" href={Astro.url.href} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="wordmark" href="/" aria-label="Thilini Karunarathna — Home">TK<span class="wordmark-dot">.</span></a>
+        <nav class="main-nav" aria-label="Main navigation">
+          {nav.map(item => <a href={item.href} aria-current={current===item.key?'page':undefined}>{item.label}</a>)}
+        </nav>
+      </div>
+    </header>
+    <main id="content"><slot /></main>
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <span>© {new Date().getFullYear()} {profile.name}</span>
+      </div>
+    </footer>
+  </body>
+</html>

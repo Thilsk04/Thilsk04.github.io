@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AboutCarousel from '../components/AboutCarousel.astro';
+import ProjectVisual from '../components/ProjectVisual.astro';
+import { profile } from '../data/profile';
+import { projects } from '../data/projects';
+const featured = [
+  {slug:'lumipal',heading:'A smartwatch game for healthier morning routines'},
+  {slug:'glucose-prediction',heading:'Predicting glucose levels with wearable data'},
+  {slug:'light-sensing',heading:'Understanding our environment with smartwatch sensors'},
+].map(({slug,heading})=>({project:projects.find(p=>p.slug===slug)!,heading}));
+---
+<BaseLayout>
+  <section class="hero wrap home-hero">
+    <div class="hero-main">
+      <p class="eyebrow hero-greeting" data-typewriter-greeting aria-label="Hello.">
+        <span class="greeting-reserve" aria-hidden="true">ආයුබෝවන්.</span>
+        <span class="greeting-animation" aria-hidden="true">
+          <span data-typewriter-output>Hello.</span><span class="greeting-cursor"></span>
+        </span>
+      </p>
+      <h1>Thilini<br/>Karunarathna<span class="hero-period">.</span></h1>
+      <p class="hero-description">{profile.introduction}</p>
+      <nav class="hero-socials" aria-label="Social profiles">
+        <a href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" title="GitHub"><img src="/images/social/github.svg" alt="" aria-hidden="true" width="23" height="23" /></a>
+        <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" title="LinkedIn"><img src="/images/social/linkedin.svg" alt="" aria-hidden="true" width="23" height="23" /></a>
+        <a href={profile.scholar} target="_blank" rel="noopener noreferrer" aria-label="Google Scholar profile" title="Google Scholar"><img src="/images/social/google-scholar.svg" alt="" aria-hidden="true" width="23" height="23" /></a>
+        <a href={profile.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram profile" title="Instagram"><img src="/images/social/instagram.svg" alt="" aria-hidden="true" width="23" height="23" /></a>
+      </nav>
+    </div>
+    <div class="hero-portrait-column">
+      {profile.portrait ? <img class="hero-portrait-image" src={profile.portrait} alt={profile.portraitAlt} fetchpriority="high" /> :
+        <div class="hero-portrait-placeholder" role="img" aria-label="Thilini Karunarathna"><span class="portrait-monogram" aria-hidden="true">TK</span><span class="portrait-placeholder-caption">Thilini Karunarathna</span></div>}
+    </div>
+  </section>
+
+  <section class="section about-section home-about-section" id="about">
+    <div class="wrap about-split-layout">
+      <AboutCarousel />
+      <div class="about-copy-column">
+        <h2>About me<span class="hero-period">.</span></h2>
+        <p class="about-intro">{profile.about}</p>
+        <p class="about-intro about-personal">{profile.aboutPersonal}</p>
+        <nav class="about-quick-links" aria-label="Explore more">
+          <a href="/about/">More about me <span aria-hidden="true">↗</span></a>
+          <a href="/research/">Research <span aria-hidden="true">↗</span></a>
+          <a href="/moments/">Moments <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="section work-section home-featured" id="work">
+    <div class="wrap">
+      <div class="section-heading"><div><h2>Featured projects.</h2></div><a class="section-more-link" href="/work/">Explore all projects <span aria-hidden="true">↗</span></a></div>
+      <div class="home-featured-grid">
+        {featured.map(({project,heading})=>(
+          <a href={`/projects/${project.slug}/`} class="home-featured-card">
+            <div class="home-featured-image"><ProjectVisual project={project}/></div>
+            <div class="home-featured-meta"><span>{project.category.split(' · ')[0]}</span><span aria-hidden="true">↗</span></div>
+            <h3>{heading}</h3>
+            <p>{project.summary}</p>
+            <span class="featured-project-name">{project.title}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section home-contact" id="contact">
+    <div class="wrap contact-content">
+      <div><h2>Get in touch.</h2><p>Interested in my work, research, or a conversation?</p></div>
+      <nav class="contact-profiles" aria-label="Professional profiles">
+        <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" title="LinkedIn"><img src="/images/social/linkedin.svg" alt="" aria-hidden="true" width="22" height="22" /></a>
+        <a href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" title="GitHub"><img src="/images/social/github.svg" alt="" aria-hidden="true" width="23" height="23" /></a>
+        <a href={profile.scholar} target="_blank" rel="noopener noreferrer" aria-label={profile.scholarIsSearch ? 'Google Scholar author search' : 'Google Scholar profile'} title={profile.scholarIsSearch ? 'Google Scholar author search' : 'Google Scholar profile'}><img src="/images/social/google-scholar.svg" alt="" aria-hidden="true" width="23" height="23" /></a>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const greeting = document.querySelector<HTMLElement>('[data-typewriter-greeting]');
+  const output = greeting?.querySelector<HTMLElement>('[data-typewriter-output]');
+
+  if (greeting && output) {
+    const greetings = ['Hello.', 'こんにちは。', 'ආයුබෝවන්.'];
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const segmenter = typeof Intl.Segmenter === 'function'
+      ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
+      : null;
+    let cycleToken = 0;
+
+    const splitGraphemes = (value: string) => segmenter
+      ? Array.from(segmenter.segment(value), ({ segment }) => segment)
+      : Array.from(value);
+    const wait = (duration: number) => new Promise((resolve) => window.setTimeout(resolve, duration));
+
+    const animateGreetings = async (token: number) => {
+      while (token === cycleToken) {
+        for (const value of greetings) {
+          const characters = splitGraphemes(value);
+          output.textContent = '';
+
+          for (let index = 1; index <= characters.length; index += 1) {
+            if (token !== cycleToken) return;
+            output.textContent = characters.slice(0, index).join('');
+            await wait(105);
+          }
+
+          await wait(3000);
+
+          for (let index = characters.length - 1; index >= 0; index -= 1) {
+            if (token !== cycleToken) return;
+            output.textContent = characters.slice(0, index).join('');
+            await wait(65);
+          }
+
+          await wait(240);
+        }
+      }
+    };
+
+    const updateMotionPreference = () => {
+      cycleToken += 1;
+      output.textContent = 'Hello.';
+      greeting.classList.toggle('is-reduced-motion', motionPreference.matches);
+
+      if (!motionPreference.matches) {
+        void animateGreetings(cycleToken);
+      }
+    };
+
+    updateMotionPreference();
+    motionPreference.addEventListener('change', updateMotionPreference);
+  }
+</script>

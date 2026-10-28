@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ExperienceTimeline from '../../components/ExperienceTimeline.astro';
+import { experienceTimeline } from '../../data/experienceTimeline';
+---
+<BaseLayout title="About | Thilini Karunarathna" description="About Thilini Karunarathna: research, teaching, experience and education.">
+ 
+  <section class="section about-background" id="background">
+    <div class="wrap">
+      <div class="section-title-block"><h2>Experience &amp; education</h2></div>
+      <ExperienceTimeline items={experienceTimeline} />
+    </div>
+  </section>
+</BaseLayout>

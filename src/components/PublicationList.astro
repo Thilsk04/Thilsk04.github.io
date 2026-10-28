@@ -1,0 +1,44 @@
+---
+import type { Publication } from '../data/highlights';
+const { items, year } = Astro.props as { items: Publication[]; year: number };
+const visibleLimit = 5;
+---
+<div class="publication-list" id={`publication-list-${year}`} data-publication-list>
+  {items.map((item, i) => (
+    <article class="publication-item" data-publication-item hidden={i >= visibleLimit}>
+      <span class="pub-index">{String(i + 1).padStart(2, '0')}</span>
+      <div>
+        <p class="pub-type">{item.type} · {item.year}</p>
+        <h3>
+          {item.link ? (
+            <a href={item.link} target="_blank" rel="noopener noreferrer">
+              {item.title}<span class="pub-outbound" aria-label="Open publication">↗</span>
+            </a>
+          ) : item.title}
+        </h3>
+        <p class="pub-authors">{item.authors}</p>
+        <p class="pub-detail">{item.venue}</p>
+        {item.recognition && (
+          <p class="pub-recognition">
+            <span class="pub-recognition-icon" aria-hidden="true">🏅</span>
+            <span>{item.recognition}</span>
+          </p>
+        )}
+      </div>
+    </article>
+  ))}
+</div>
+{items.length > visibleLimit && (
+  <button
+    class="publication-show-all"
+    type="button"
+    aria-expanded="false"
+    aria-controls={`publication-list-${year}`}
+    data-publication-toggle
+  >
+    <span data-publication-toggle-label>Show all</span>
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m6 9 6 6 6-6"></path>
+    </svg>
+  </button>
+)}

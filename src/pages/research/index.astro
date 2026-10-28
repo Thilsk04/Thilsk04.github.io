@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PublicationList from '../../components/PublicationList.astro';
+import RecognitionSection from '../../components/RecognitionSection.astro';
+import { publications } from '../../data/highlights';
+const years = [...new Set(publications.map(p=>p.year))].sort((a,b)=>b-a);
+---
+<BaseLayout title="Research | Thilini Karunarathna" description="Publications on wearable sensing, machine learning for health and interactive applications, grouped by year.">
+  <div class="wrap publications-page research-page">
+    <div class="publications-page-header">
+      <h1>Research<span class="hero-period">.</span></h1>
+      <p>My research explores wearable sensing, machine learning for health, and interactive systems.</p>
+    </div>
+    <section class="publication-year-tabs" data-publication-tabs aria-labelledby="publications-heading">
+      <h2 id="publications-heading">Publications</h2>
+      <div class="publication-year-nav" role="tablist" aria-label="Publication year">
+        {years.map((year, index)=><button class="publication-year-tab" id={`year-${year}-tab`} type="button" role="tab" aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`year-${year}-panel`} tabindex={index === 0 ? 0 : -1}>{year}</button>)}
+      </div>
+    {years.map((year, index)=>(
+      <div class="publication-year-panel" id={`year-${year}-panel`} role="tabpanel" aria-labelledby={`year-${year}-tab`} tabindex="0" hidden={index !== 0}>
+        <PublicationList items={publications.filter(p=>p.year===year)} year={year}/>
+      </div>
+    ))}
+    </section>
+    <RecognitionSection />
+  </div>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-publication-tabs]').forEach((tabSet) => {
+    const tabs = Array.from(tabSet.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+
+    const resetPanel = (panel: HTMLElement) => {
+      const items = Array.from(panel.querySelectorAll<HTMLElement>('[data-publication-item]'));
+      const toggle = panel.querySelector<HTMLButtonElement>('[data-publication-toggle]');
+      const label = toggle?.querySelector<HTMLElement>('[data-publication-toggle-label]');
+
+      items.forEach((item, index) => { item.hidden = index >= 5; });
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      if (label) label.textContent = 'Show all';
+    };
+
+    const activateTab = (activeTab: HTMLButtonElement) => {
+      tabs.forEach((tab) => {
+        const isActive = tab === activeTab;
+        const panelId = tab.getAttribute('aria-controls');
+        const panel = panelId ? document.getElementById(panelId) : null;
+
+        tab.setAttribute('aria-selected', String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
+        if (panel) {
+          resetPanel(panel);
+          panel.hidden = !isActive;
+        }
+      });
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activateTab(tab));
+      tab.addEventListener('keydown', (event) => {
+        let nextIndex: number | undefined;
+
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = tabs.length - 1;
+
+        if (nextIndex !== undefined) {
+          event.preventDefault();
+          activateTab(tabs[nextIndex]);
+          tabs[nextIndex].focus();
+        }
+      });
+    });
+
+    tabSet.querySelectorAll<HTMLButtonElement>('[data-publication-toggle]').forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const panel = toggle.closest<HTMLElement>('[role="tabpanel"]');
+        const label = toggle.querySelector<HTMLElement>('[data-publication-toggle-label]');
+        if (!panel) return;
+
+        const expanded = toggle.getAttribute('aria-expanded') !== 'true';
+        panel.querySelectorAll<HTMLElement>('[data-publication-item]').forEach((item, index) => {
+          item.hidden = !expanded && index >= 5;
+        });
+        toggle.setAttribute('aria-expanded', String(expanded));
+        if (label) label.textContent = expanded ? 'Show less' : 'Show all';
+      });
+    });
+  });
+</script>

@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { albums } from '../../data/life';
+const sections = [
+  {heading:'Travel',items:albums.filter(a=>a.category==='Travel')},
+  {heading:'Teaching',items:albums.filter(a=>a.category==='Teaching')},
+  {heading:'Dorm & campus',items:albums.filter(a=>a.category==='Campus')},
+];
+---
+<BaseLayout title="Moments | Thilini Karunarathna" description="Photographs from travel, teaching, research and university community activities.">
+  <div class="wrap life-page moments-page">
+    <h1>Moments<span class="hero-period">.</span></h1>
+    <p class="life-lede">Places I've visited, things I've worked on, and activities I've been part of.</p>
+    {sections.map(section=>(
+      <section class="life-group" aria-label={section.heading}>
+        <div class="life-group-heading"><h2>{section.heading}</h2></div>
+        <div class="life-album-grid">
+          {section.items.map(album=>(
+            <a class="life-album-card" href={`/moments/${album.slug}/`}>
+              <div class="life-album-cover">
+                {(album.cover||album.photos[0]?.src) ? <img src={album.cover||album.photos[0].src} alt={album.cover ? (album.coverAlt||'') : (album.photos[0]?.alt||'')} loading="lazy"/> :
+                  <div class="life-cover-placeholder" aria-label={`${album.title} album cover unavailable`}><span class="life-cover-word">{album.title}</span><span class="life-cover-hint">Photos unavailable</span></div>}
+              </div>
+              <div class="life-album-info"><div><h3>{album.title}</h3><p>{album.subtitle}</p></div><span aria-hidden="true" class="life-album-arrow">↗</span></div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

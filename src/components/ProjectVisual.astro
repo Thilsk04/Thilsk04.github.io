@@ -1,0 +1,72 @@
+---
+import type { Project } from '../data/projects';
+const { project, large = false } = Astro.props as { project: Project; large?: boolean };
+---
+<div class:list={['project-visual', 'visual-' + project.visual, { 'visual-large': large }]}>
+  {project.image ? (
+    <img src={project.image} alt={project.imageAlt ?? `${project.title} project preview`} loading="lazy" />
+  ) : (
+    <div class="visual-content" role="img" aria-label={`Illustrative preview for ${project.title}`}>
+      {project.visual === 'watch' && (
+        <div class="watch-figure">
+          <div class="watch-band band-top"></div>
+          <div class="watch-face">
+            <div class="watch-glow" aria-hidden="true"></div>
+            <div class="watch-inside">
+              <span class="watch-small">LumiPal</span>
+              <span class="watch-ring" aria-hidden="true"><span></span></span>
+              <span class="watch-label">Morning light</span>
+            </div>
+          </div>
+          <div class="watch-band band-bottom"></div>
+        </div>
+      )}
+      {project.visual === 'chart' && (
+        <div class="chart-figure" aria-hidden="true">
+          <div class="chart-top"><span>ML / wearables</span><span>research</span></div>
+          <svg viewBox="0 0 320 152" preserveAspectRatio="none" role="presentation"><path class="chart-guide" d="M0 35 H320 M0 78 H320 M0 121 H320"/><path class="chart-path" d="M0 96 C21 88 40 30 66 65 S114 136 142 83 S187 25 212 80 S255 125 282 62 S305 70 320 45"/></svg>
+          <span class="chart-caption">Illustrative preview · not research data</span>
+        </div>
+      )}
+      {project.visual === 'light' && (
+        <div class="light-figure" aria-hidden="true">
+          <div class="light-rays"><span></span><span></span><span></span><span></span></div>
+          <div class="light-disc"></div>
+          <div class="light-base"></div>
+          <span class="light-caption">ambient light sensing</span>
+        </div>
+      )}
+      {project.visual === 'sensor' && (
+        <div class="sensor-validation-figure" aria-hidden="true">
+          <span class="sensor-validation-caption">Illuminance measurement comparison</span>
+          <div class="sensor-validation-flow">
+            <div class="sensor-validation-node"><strong>Pixel Watch 3</strong><small>Ambient light sensor</small></div>
+            <span class="sensor-validation-arrow">↔</span>
+            <div class="sensor-validation-node reference"><strong>Lux meter</strong><small>Reference reading</small></div>
+          </div>
+          <p class="sensor-validation-foot">Agreement · Bias · Between-device variation</p>
+        </div>
+      )}
+      {project.visual === 'tree' && (
+        <div class="tree-figure" aria-hidden="true">
+          <div class="tree-eyebrow"><span>LumiTree</span><span>Pixel Watch 3</span></div>
+          <div class="tree-art">
+            <svg viewBox="0 0 170 135" role="presentation" aria-hidden="true">
+              <path d="M85 120V64 M85 89L62 75 M85 80L109 63" fill="none" stroke="#7b6756" stroke-width="6" stroke-linecap="round"/>
+              <ellipse cx="85" cy="47" rx="30" ry="25" fill="#cbd6ba"/>
+              <ellipse cx="61" cy="65" rx="26" ry="20" fill="#a9bc95"/>
+              <ellipse cx="110" cy="66" rx="24" ry="22" fill="#b6c8a6"/>
+              <ellipse cx="86" cy="68" rx="28" ry="22" fill="#a0b58e"/>
+              <circle cx="61" cy="80" r="6.5" fill="#b9724e"/>
+              <circle cx="108" cy="65" r="6.5" fill="#b9724e"/>
+              <circle cx="90" cy="40" r="6.5" fill="#b9724e"/>
+              <path d="M59 120H111" stroke="#968877" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="tree-foot"><span>morning light</span><span>→</span><span>tree growth</span></div>
+        </div>
+      )}
+      <span class="visual-placeholder-note">Illustrative preview</span>
+    </div>
+  )}
+</div>

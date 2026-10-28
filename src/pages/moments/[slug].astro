@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { albums } from '../../data/life';
+export function getStaticPaths(){return albums.map(album=>({params:{slug:album.slug},props:{album}}));}
+const { album }=Astro.props;
+---
+<BaseLayout title={`${album.title} | Moments — Thilini Karunarathna`} description={album.subtitle}>
+  <article class="wrap life-album-page">
+    <a href="/moments/" class="back-link">← All moments</a>
+    <h1>{album.title}</h1>
+    <p class="life-lede"><span class="life-album-category">{album.category}.</span> {album.intro}</p>
+    {album.photos.length>0 ? (
+      <div class="life-photos-grid">
+        {album.photos.map(photo=>(<figure class="life-photo"><div class="life-photo-frame"><img src={photo.src} alt={photo.alt||''} loading="lazy"/></div><figcaption>{photo.location&&<span class="life-photo-place">{photo.location}</span>}{photo.caption&&<p>{photo.caption}</p>}</figcaption></figure>))}
+      </div>
+    ) : <div class="life-empty-album"><p>No photos added yet.</p><span>Photos and captions can be added in <code>src/data/life.json</code>.</span></div>}
+  </article>
+</BaseLayout>

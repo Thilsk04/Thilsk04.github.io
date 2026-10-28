@@ -1,0 +1,260 @@
+---
+import type { TimelineCategory, TimelineItem } from '../data/experienceTimeline';
+
+type Props = {
+  items: TimelineItem[];
+};
+
+const { items } = Astro.props;
+const orderedItems = [...items].sort((a, b) => b.startDate.localeCompare(a.startDate));
+const categories: { key: TimelineCategory; label: string }[] = [
+  { key: 'education', label: 'Education' },
+  { key: 'research', label: 'Research' },
+  { key: 'teaching', label: 'Teaching' },
+  { key: 'community', label: 'Community' },
+  { key: 'work', label: 'Other work' },
+];
+const categoryColors: Record<TimelineCategory, string> = {
+  education: '#6b7d62',
+  research: '#a9582b',
+  teaching: '#597e91',
+  community: '#ac8f5d',
+  work: '#83758b',
+};
+---
+
+<div class="experience-timeline" data-experience-timeline>
+  <div class="experience-legend" aria-label="Timeline categories">
+    {categories.map(({ key, label }) => (
+      <span class="experience-legend-item">
+        <span class="experience-legend-dot" style={`--timeline-accent: ${categoryColors[key]}`} aria-hidden="true"></span>
+        {label}
+      </span>
+    ))}
+  </div>
+
+  <div class="experience-timeline-track" aria-label="Experience and education, ordered by start date from newest to oldest">
+    {orderedItems.map((item, index) => {
+      const position = index % 2 === 0 ? 'left' : 'right';
+      const button = (
+        <button
+          class={`experience-event experience-event-${position}`}
+          type="button"
+          disabled
+          aria-label={`Details: ${item.title}, ${item.dateRange}`}
+          aria-controls="experience-detail"
+          aria-pressed="false"
+          data-experience-event
+          data-title={`${item.title} · ${item.organization}`}
+          data-detail={item.detail}
+          data-color={categoryColors[item.category]}
+        >
+          <span class="experience-event-head">
+            {item.category === 'education' && (
+              <svg class="experience-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.55" viewBox="0 0 24 24">
+                <path d="m2 10 10-5 10 5-10 5z"></path><path d="M6 12v5c4 3 8 3 12 0v-5"></path><path d="M22 10v7"></path>
+              </svg>
+            )}
+            {item.category === 'research' && (
+              <svg class="experience-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.55" viewBox="0 0 24 24">
+                <path d="M9 3h6"></path><path d="M10 3v8l-4.5 7.5A2 2 0 0 0 7.2 22h9.6a2 2 0 0 0 1.7-3.5L14 11V3"></path><path d="M8 17h8"></path>
+              </svg>
+            )}
+            {item.category === 'teaching' && (
+              <svg class="experience-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.55" viewBox="0 0 24 24">
+                <path d="M3 7h7a3 3 0 0 1 3 3v11H5a2 2 0 0 0-2 2V7zm18 0h-7a3 3 0 0 0-3 3v11h8a2 2 0 0 1 2 2V7z"></path>
+              </svg>
+            )}
+            {item.category === 'community' && (
+              <svg class="experience-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.55" viewBox="0 0 24 24">
+                <circle cx="9" cy="8" r="3"></circle><path d="M2 21v-2a6 6 0 0 1 12 0v2"></path><circle cx="18" cy="8" r="2"></circle><path d="M16 14a5 5 0 0 1 6 5v2"></path>
+              </svg>
+            )}
+            {item.category === 'work' && (
+              <svg class="experience-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.55" viewBox="0 0 24 24">
+                <rect height="14" rx="2" width="18" x="3" y="7"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"></path>
+              </svg>
+            )}
+            <span>{item.startLabel}</span>
+          </span>
+          <strong class="experience-event-name">{item.title}</strong>
+          <span class="experience-event-org">{item.organization}</span>
+          <span class="experience-event-dates">{item.dateRange}</span>
+        </button>
+      );
+
+      return (
+        <div class={`experience-timeline-row experience-timeline-row-${position}`} style={`--timeline-accent: ${categoryColors[item.category]}`}>
+          <div class="experience-timeline-side experience-timeline-left">{position === 'left' && button}</div>
+          <div class="experience-timeline-core" aria-hidden="true"><span class="experience-arm"></span><span class="experience-dot"></span></div>
+          <div class="experience-timeline-side experience-timeline-right">{position === 'right' && button}</div>
+        </div>
+      );
+    })}
+  </div>
+
+  {/* Details panel temporarily disabled; uncomment this markup and re-enable the timeline buttons to restore it.
+  <div class="experience-details" id="experience-detail" role="status" aria-live="polite" aria-atomic="true">
+    <span class="experience-details-mark" aria-hidden="true"></span>
+    <div>
+      <span class="experience-details-label">Details</span>
+      <h3 class="experience-details-title" data-detail-title>Select an experience</h3>
+      <p class="experience-details-copy" data-detail-copy>Choose a timeline entry to view more information.</p>
+    </div>
+  </div>
+  */}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-experience-timeline]').forEach((timeline) => {
+    const buttons = timeline.querySelectorAll<HTMLButtonElement>('[data-experience-event]');
+    const title = timeline.querySelector<HTMLElement>('[data-detail-title]');
+    const copy = timeline.querySelector<HTMLElement>('[data-detail-copy]');
+    const marker = timeline.querySelector<HTMLElement>('.experience-details-mark');
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        if (!title || !copy || !marker) return;
+        title.textContent = button.dataset.title ?? '';
+        copy.textContent = button.dataset.detail ?? '';
+        marker.style.backgroundColor = button.dataset.color ?? '';
+        buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      });
+    });
+  });
+</script>
+
+<style>
+  .experience-timeline {
+    --timeline-education: #6b7d62;
+    --timeline-research: #a9582b;
+    --timeline-teaching: #597e91;
+    --timeline-community: #ac8f5d;
+    --timeline-work: #83758b;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  .experience-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    padding: 20px 0 22px;
+    margin-top: 14px;
+    border-bottom: 1px solid var(--line);
+    color: #5e625d;
+    font-size: 12px;
+  }
+
+  .experience-legend-item { display: inline-flex; align-items: center; gap: 8px; }
+  .experience-legend-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--timeline-accent); }
+
+  .experience-timeline-track { position: relative; isolation: isolate; padding: 12px 0 15px; }
+  .experience-timeline-track::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 69px;
+    bottom: 65px;
+    left: 50%;
+    width: 4px;
+    transform: translateX(-50%);
+    border-radius: 8px;
+    background: #bfc8be;
+  }
+
+  .experience-timeline-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr);
+    min-height: 122px;
+    position: relative;
+  }
+
+  .experience-timeline-side { display: flex; align-items: center; min-width: 0; }
+  .experience-timeline-left { justify-content: flex-end; text-align: right; }
+  .experience-timeline-right { justify-content: flex-start; text-align: left; }
+  .experience-timeline-core { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; }
+  .experience-dot {
+    z-index: 2;
+    width: 14px;
+    height: 14px;
+    border: 3px solid var(--bg);
+    border-radius: 50%;
+    background: var(--timeline-accent);
+    box-shadow: 0 0 0 2px var(--timeline-accent);
+  }
+  .experience-arm {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 45%;
+    height: 2px;
+    border-radius: 3px;
+    background: var(--timeline-accent);
+  }
+  .experience-timeline-row-left .experience-arm { right: 50%; left: auto; }
+
+  .experience-event {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 380px;
+    padding: 11px 18px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    cursor: default;
+    font: inherit;
+    /* Temporarily disabled with the Details panel: transition: background-color .2s ease, transform .2s ease; */
+  }
+  .experience-event-left { align-items: flex-end; text-align: right; }
+  .experience-event-right { align-items: flex-start; text-align: left; }
+  /* Temporarily disabled with the Details panel.
+  .experience-event:hover { background: rgba(217, 214, 206, .3); }
+  .experience-event:focus-visible { outline: 2px solid var(--timeline-accent); outline-offset: 2px; background: rgba(217, 214, 206, .3); }
+  .experience-event[aria-pressed='true'] { background: rgba(217, 214, 206, .42); }
+  */
+  .experience-event-head { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 5px; color: var(--timeline-accent); font-size: 11px; font-weight: 700; letter-spacing: .035em; }
+  .experience-icon { width: 19px; height: 19px; flex: 0 0 auto; }
+  .experience-event-name { font-size: 17px; line-height: 1.38; font-weight: 700; letter-spacing: -.03em; }
+  .experience-event-org { margin-top: 3px; color: #636861; font-size: 12px; font-weight: 500; }
+  .experience-event-dates { margin-top: 5px; color: #6c716c; font-size: 12px; }
+
+  .experience-details {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    max-width: 760px;
+    min-height: 92px;
+    margin: 20px auto 0;
+    padding: 19px 22px;
+    border-radius: 12px;
+    background: #efefeb;
+  }
+  .experience-details-mark { display: inline-block; flex: 0 0 auto; width: 5px; height: 65px; border-radius: 4px; background: var(--timeline-research); transition: background-color .2s ease; }
+  .experience-details-label { color: #73786e; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .experience-details-title { margin: 4px 0; font-size: 16px; font-weight: 700; }
+  .experience-details-copy { color: #686d68; font-size: 13px; line-height: 1.6; }
+
+  @media (max-width: 700px) {
+    .experience-legend { gap: 11px 14px; padding: 15px 0 22px; margin-top: 13px; font-size: 11px; }
+    .experience-timeline-track { padding-top: 5px; }
+    .experience-timeline-track::before { top: 58px; bottom: 55px; left: 19px; width: 4px; transform: none; }
+    .experience-timeline-row { grid-template-columns: 44px minmax(0, 1fr); min-height: 112px; }
+    .experience-timeline-core { grid-column: 1; grid-row: 1; }
+    .experience-timeline-side { grid-column: 2; grid-row: 1; justify-content: flex-start; text-align: left; }
+    .experience-timeline-side:empty { display: none; }
+    .experience-dot { position: absolute; left: 19px; transform: translateX(-50%); }
+    .experience-arm, .experience-timeline-row-left .experience-arm { right: auto; left: 50%; width: 60%; }
+    .experience-event, .experience-event-left, .experience-event-right { align-items: flex-start; max-width: none; padding: 10px 5px; text-align: left; }
+    .experience-event-name { font-size: 15px; }
+    .experience-event-org, .experience-event-dates { font-size: 11.5px; }
+    .experience-details { margin-top: 18px; padding: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .experience-event, .experience-details-mark { transition: none; }
+  }
+</style>

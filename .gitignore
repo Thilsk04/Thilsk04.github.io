@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Astro output
+dist/
+.astro/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+
+# Hosting output
+.vercel/
+.netlify/
+
+# Temporary files
+*.tmp
+*.temp
